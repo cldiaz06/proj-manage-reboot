@@ -9,4 +9,7 @@ import com.cldiaz.springreact.projmanagetool.domain.Project;
 public interface ProjectRepository extends CrudRepository<Project, Long> {
 	
 	Project findByProjectIdentifier(String projIdentifier);
+	
+	@Override
+	Iterable<Project> findAll();
 }
