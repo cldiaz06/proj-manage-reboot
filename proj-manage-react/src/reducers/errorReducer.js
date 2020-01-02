@@ -1,11 +1,11 @@
-import {GET_ERRORS} from '../actions/Types';
+import {GET_ERRORs} from '../actions/Types';
 
 const initState = {};
 
 export default function(state=initState, action){
     switch(action.type){
         
-        case GET_ERRORS:
+        case GET_ERRORs:
             return action.payload;
         
         default:
