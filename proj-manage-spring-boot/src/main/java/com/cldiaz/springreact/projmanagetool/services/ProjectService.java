@@ -3,8 +3,10 @@ package com.cldiaz.springreact.projmanagetool.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cldiaz.springreact.projmanagetool.domain.Backlog;
 import com.cldiaz.springreact.projmanagetool.domain.Project;
 import com.cldiaz.springreact.projmanagetool.exception.ProjectIdException;
+import com.cldiaz.springreact.projmanagetool.repositories.BacklogRepository;
 import com.cldiaz.springreact.projmanagetool.repositories.ProjectRepository;
 
 @Service
@@ -13,12 +15,31 @@ public class ProjectService {
 	@Autowired
 	private ProjectRepository projRespository;
 	
+	@Autowired
+	private BacklogRepository backlogRepository;
+	
 	public Project saveOrUpdatePrj(Project project) {
+		
+		String projIdentifier = project.getProjectIdentifier().toUpperCase();
+		
 		try {
-			project.setProjectIdentifier(project.getProjectIdentifier().toUpperCase());
+			project.setProjectIdentifier(projIdentifier);
+			
+			if(project.getId() == null) {
+				Backlog log = new Backlog();
+				project.setBacklog(log);
+				log.setProject(project);
+				log.setProjectIdentifier(projIdentifier);
+			}
+			
+			if(project.getId() != null) {
+				project.setBacklog(backlogRepository.findByProjectIdentifier(projIdentifier));
+			}
+			
 			return projRespository.save(project);
+			
 		}catch(Exception x) {
-			throw new ProjectIdException("Project ID '" + project.getProjectIdentifier().toUpperCase()+"' already exists");
+			throw new ProjectIdException("Project ID '" +projIdentifier+"' already exists");
 		}
 	}
 	

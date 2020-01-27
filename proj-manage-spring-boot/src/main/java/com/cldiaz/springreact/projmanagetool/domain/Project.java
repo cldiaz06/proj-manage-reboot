@@ -2,11 +2,14 @@ package com.cldiaz.springreact.projmanagetool.domain;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.validation.constraints.NotBlank;
@@ -44,6 +47,9 @@ public class Project {
 	
 	@JsonFormat(pattern="yyyy-mm-dd")
 	private Date lastModfDate;
+	
+	@OneToOne(fetch=FetchType.EAGER, cascade = CascadeType.ALL, mappedBy="project")
+	private Backlog backlog;
 	
 	public Project() {}
 	
@@ -148,6 +154,16 @@ public class Project {
 	public void setLastModfDate(Date lastModfDate) {
 		this.lastModfDate = lastModfDate;
 	}
+
+	public Backlog getBacklog() {
+		return backlog;
+	}
+
+	public void setBacklog(Backlog backlog) {
+		this.backlog = backlog;
+	}
+	
+	
 
 
 
