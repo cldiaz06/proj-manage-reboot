@@ -64,17 +64,48 @@ public class ProjectTaskService {
 		return projectTaskRepo.findByProjectIdentifierOrderByPriority(backlog_id);
 	}
 	
-	public ProjectTask findProjTaskByProjSequence(String backlog_id,String projectSequence) {
+	public ProjectTask findProjTaskByProjSequence(String backlog_id,String pt_id) {
 		
 		Backlog backlog = backlogRep.findByProjectIdentifier(backlog_id);
 		
 		if(backlog == null) {
-			//return exception
+			throw new ProjNotFoundException("Project with id: "+ backlog_id +" doesn''t exists.");
 		}
 		
+		ProjectTask projectTask = projectTaskRepo.findByProjSequence(pt_id);
 		
+		if(projectTask == null) {
+			throw new ProjNotFoundException("Project task with id: "+ pt_id +" doesn''t exists.");
+		}
 		
-		return projectTaskRepo.findByProjSequence(projectSequence);
+		if(!projectTask.getBacklog().getProjectIdentifier().equals(backlog.getProjectIdentifier())) {
+			throw new ProjNotFoundException("Project with id: "+ pt_id+" doesn''t exists in project " + backlog_id);
+		}
+		
+		return projectTask;
+	}
+	
+	public ProjectTask updateByProjSequence(ProjectTask updateTask, String backlog_id, String pt_id) {
+		ProjectTask projectTask = findProjTaskByProjSequence(backlog_id, pt_id);
+		
+		if(projectTask == null) {
+			throw new ProjNotFoundException("Project task with id: "+ pt_id+" doesn''t exists.");
+		}
+		
+		projectTask = updateTask;
+		
+		return projectTaskRepo.save(projectTask);
+		
+	}
+	
+	public void deleteProjectTask(String backlog_id, String pt_id) {
+		ProjectTask projectTask = findProjTaskByProjSequence(backlog_id, pt_id);
+		
+		if(projectTask == null) {
+			throw new ProjNotFoundException("Project task with id: "+ pt_id+" doesn''t exists.");
+		}
+		
+		projectTaskRepo.delete(projectTask);
 	}
 
 }
