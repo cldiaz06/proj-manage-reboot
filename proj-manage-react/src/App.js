@@ -10,6 +10,7 @@ import store from './store';
 import UpdateProject from './Components/Project/UpdateProject';
 import ProjectBoard from './Components/ProjectBoard/ProjectBoard';
 import AddProjectTask from './Components/ProjectBoard/ProjectTasks/AddProjectTask';
+import UpdateProjectTask from './Components/ProjectBoard/ProjectTasks/UpdateProjectTask';
 
 class App extends Component {
   render(){
@@ -23,6 +24,7 @@ class App extends Component {
               <Route exact path="/updateProject/:id" component={UpdateProject} />
               <Route exact path="/projectBoard/:id" component={ProjectBoard} /> 
               <Route exact path="/addProjectTask/:id" component={AddProjectTask}/>
+              <Route exact path="/UpdateProjectTask/:backlog_id/:ptId" component={UpdateProjectTask}/>
             </div>
           </Router>
         </Provider>

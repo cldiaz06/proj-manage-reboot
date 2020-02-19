@@ -54,8 +54,6 @@ class AddProjectTask extends Component {
     }
     
     render() {
-
-        const { id } = this.props.match.params;
         const { errors } = this.state;
 
         return (
