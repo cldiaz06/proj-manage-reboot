@@ -24,4 +24,10 @@ public class CustomResponseEntityExceptHandler extends ResponseEntityExceptionHa
 		return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
 	}
 	
+	@ExceptionHandler
+	public final ResponseEntity<Object> handleUniqueUsernameExcept(UniqueUsernameException ex, WebRequest request){
+		UniqueUsernameExceptionResponse exceptionResponse = new UniqueUsernameExceptionResponse(ex.getMessage());
+		return new ResponseEntity(exceptionResponse, HttpStatus.BAD_REQUEST);
+	}
+	
 }
