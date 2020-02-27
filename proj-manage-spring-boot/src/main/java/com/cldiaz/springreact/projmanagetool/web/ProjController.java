@@ -1,5 +1,7 @@
 package com.cldiaz.springreact.projmanagetool.web;
 
+import java.security.Principal;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,29 +33,29 @@ public class ProjController {
 	private MapValidErrorService mapValidErrorService;
 	
 	@PostMapping("")
-	public ResponseEntity<?> createNewProject(@Valid @RequestBody Project proj, BindingResult result){
+	public ResponseEntity<?> createNewProject(@Valid @RequestBody Project proj, BindingResult result, Principal principal){
 		
 		ResponseEntity<?> errorMap = mapValidErrorService.MapValidation(result);
 		if(errorMap != null) return errorMap;
 
-		Project project = projService.saveOrUpdatePrj(proj);
+		Project project = projService.saveOrUpdatePrj(proj, principal.getName());
 		return new ResponseEntity<Project>(project, HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/{projectId}")
-	public ResponseEntity<?> getProjectById(@PathVariable String projectId){
-		Project proj = projService.findProjectByIdentifier(projectId);
+	public ResponseEntity<?> getProjectById(@PathVariable String projectId, Principal principal){
+		Project proj = projService.findProjectByIdentifier(projectId, principal.getName());
 		return new ResponseEntity<Project>(proj, HttpStatus.OK);
 	}
 	
 	@GetMapping("/all")
-	public Iterable<Project> getAllProjects(){
-		return projService.findAllProjects();
+	public Iterable<Project> getAllProjects(Principal principal){
+		return projService.findAllProjects(principal.getName());
 	}
 	
 	@DeleteMapping("/{projectId}")
-	public ResponseEntity<?> deleteProj(@PathVariable String projectId){
-		projService.deleteProjByIdentifier(projectId);
+	public ResponseEntity<?> deleteProj(@PathVariable String projectId, Principal principal){
+		projService.deleteProjByIdentifier(projectId, principal.getName());
 		
 		return new ResponseEntity<String>("Project with ID: '" + projectId+"'was deleted.", HttpStatus.OK);
 	}

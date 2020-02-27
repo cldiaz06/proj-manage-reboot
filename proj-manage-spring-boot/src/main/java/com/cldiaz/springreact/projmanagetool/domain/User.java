@@ -1,14 +1,19 @@
 package com.cldiaz.springreact.projmanagetool.domain;
 
 import java.security.KeyStore.PrivateKeyEntry;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Transient;
@@ -18,7 +23,10 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.cldiaz.springreact.projmanagetool.services.ProjectService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import io.swagger.annotations.License;
 
 @Entity
 public class User implements UserDetails{
@@ -43,6 +51,8 @@ public class User implements UserDetails{
 	private Date createDate;
 	private Date lastModfDate;
 	
+	@OneToMany(cascade = CascadeType.REFRESH, fetch = FetchType.EAGER, mappedBy = "user", orphanRemoval = true)
+	private List<Project> projects = new ArrayList<>();
 	//OneToMany with project
 	
 	@PrePersist
