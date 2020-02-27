@@ -30,6 +30,16 @@ public class ProjectService {
 		
 		String projIdentifier = project.getProjectIdentifier().toUpperCase();
 		
+		if(project.getId() != null) {
+			Project existProj = projRespository.findByProjectIdentifier(projIdentifier);
+			if(( existProj != null) && (!existProj.getUser().getUsername().equals(username))) {
+				throw new ProjNotFoundException("Project not found for your account.");
+			}else if((existProj != null) && (!existProj.getId().equals(project.getId()))) {
+				throw new ProjNotFoundException("Project with id " + projIdentifier + " doesn''t exist, thus no update executed.");
+			}
+			
+		}
+		
 		try {
 		
 			User user = userRepository.findByUsername(username);
@@ -37,8 +47,9 @@ public class ProjectService {
 			project.setProjectIdentifier(projIdentifier);
 			project.setUser(user);
 			project.setProjectLeader(username);
-			
+					
 			if(project.getId() == null) {
+			
 				Backlog log = new Backlog();
 				project.setBacklog(log);
 				log.setProject(project);
@@ -75,13 +86,7 @@ public class ProjectService {
 	}
 	
 	public void deleteProjByIdentifier(String projectId, String username) {
-//		Project proj = projRespository.findByProjectIdentifier(projectId);
-//		
-//		if(proj == null) {
-//			throw new ProjectIdException("Cannot find Project with ID:'" + projectId +"'. this project does not exist.");		
-//		}
-		
-//		projRespository.delete(proj);
+
 		projRespository.delete(findProjectByIdentifier(projectId, username));
 	}
 	

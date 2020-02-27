@@ -25,10 +25,15 @@ public class ProjectTaskService {
 	@Autowired 
 	private ProjectRepository projectRepository;
 	
-	public ProjectTask addProjectTesk(String projectIdentifier,ProjectTask projectTask) {
+	@Autowired
+	private ProjectService projectService;
+	
+	public ProjectTask addProjectTesk(String projectIdentifier,ProjectTask projectTask, String username) {
 		
 		try {
-			Backlog backlog = backlogRep.findByProjectIdentifier(projectIdentifier);
+			//Backlog backlog = backlogRep.findByProjectIdentifier(projectIdentifier);
+			
+			Backlog backlog = projectService.findProjectByIdentifier(projectIdentifier, username).getBacklog();
 			projectTask.setBacklog(backlog);
 			
 			Integer backLogSeq = backlog.getPTSequence();
@@ -55,22 +60,25 @@ public class ProjectTaskService {
 		
 	}
 
-	public Iterable <ProjectTask> findBacklogById(String backlog_id) {
+	public Iterable <ProjectTask> findBacklogById(String backlog_id, String username) {
 		
-		Project proj = projectRepository.findByProjectIdentifier(backlog_id);
+		//Project proj = projectRepository.findByProjectIdentifier(backlog_id);
+		Project proj = projectService.findProjectByIdentifier(backlog_id, username);
 		if(proj ==null) {
 			throw new ProjNotFoundException("Project with id: "+ backlog_id +" doesn''t exists.");
 		}
 		return projectTaskRepo.findByProjectIdentifierOrderByPriority(backlog_id);
 	}
 	
-	public ProjectTask findProjTaskByProjSequence(String backlog_id,String pt_id) {
+	public ProjectTask findProjTaskByProjSequence(String backlog_id,String pt_id, String username) {
 		
-		Backlog backlog = backlogRep.findByProjectIdentifier(backlog_id);
+		projectService.findProjectByIdentifier(backlog_id, username);
 		
-		if(backlog == null) {
-			throw new ProjNotFoundException("Project with id: "+ backlog_id +" doesn''t exists.");
-		}
+//		Backlog backlog = backlogRep.findByProjectIdentifier(backlog_id);
+//		
+//		if(backlog == null) {
+//			throw new ProjNotFoundException("Project with id: "+ backlog_id +" doesn''t exists.");
+//		}
 		
 		ProjectTask projectTask = projectTaskRepo.findByProjSequence(pt_id);
 		
@@ -78,15 +86,15 @@ public class ProjectTaskService {
 			throw new ProjNotFoundException("Project task with id: "+ pt_id +" doesn''t exists.");
 		}
 		
-		if(!projectTask.getBacklog().getProjectIdentifier().equals(backlog.getProjectIdentifier())) {
-			throw new ProjNotFoundException("Project with id: "+ pt_id+" doesn''t exists in project " + backlog_id);
-		}
+//		if(!projectTask.getBacklog().getProjectIdentifier().equals(backlog.getProjectIdentifier())) {
+//			throw new ProjNotFoundException("Project with id: "+ pt_id+" doesn''t exists in project " + backlog_id);
+//		}
 		
 		return projectTask;
 	}
 	
-	public ProjectTask updateByProjSequence(ProjectTask updateTask, String backlog_id, String pt_id) {
-		ProjectTask projectTask = findProjTaskByProjSequence(backlog_id, pt_id);
+	public ProjectTask updateByProjSequence(ProjectTask updateTask, String backlog_id, String pt_id, String username) {
+		ProjectTask projectTask = findProjTaskByProjSequence(backlog_id, pt_id, username);
 		
 		if(projectTask == null) {
 			throw new ProjNotFoundException("Project task with id: "+ pt_id+" doesn''t exists.");
@@ -98,8 +106,8 @@ public class ProjectTaskService {
 		
 	}
 	
-	public void deleteProjectTask(String backlog_id, String pt_id) {
-		ProjectTask projectTask = findProjTaskByProjSequence(backlog_id, pt_id);
+	public void deleteProjectTask(String backlog_id, String pt_id, String username) {
+		ProjectTask projectTask = findProjTaskByProjSequence(backlog_id, pt_id, username);
 		
 		if(projectTask == null) {
 			throw new ProjNotFoundException("Project task with id: "+ pt_id+" doesn''t exists.");
