@@ -16,7 +16,7 @@ import javax.persistence.PreUpdate;
 import javax.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 @Entity
 public class ProjectTask {
 
@@ -31,12 +31,18 @@ public class ProjectTask {
 	private String acceptCriteria;
 	private String status;
 	private Integer priority;
+
+	@JsonFormat(pattern = "yyyy-mm-dd")
 	private Date dueDate;
 	//ManyToOne with Backlog
 	
 	@Column(updatable=false)
 	private String projectIdentifier;
+
+	@JsonFormat(pattern = "yyyy-mm-dd")
 	private Date createDate;
+
+	@JsonFormat(pattern = "yyyy-mm-dd")
 	private Date lastModifiedDate;
 	
 	@ManyToOne(fetch=FetchType.EAGER)//, cascade=CascadeType.REFRESH)
