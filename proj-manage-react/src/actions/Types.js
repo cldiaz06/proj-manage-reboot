@@ -8,3 +8,6 @@ export const DEL_PROJECT = "DEL_PROJECT";
 export const GET_BACKLOG = "GET_BACKLOG";
 export const GET_PROJECT_TASK = "GET_PROJECT_TASK";
 export const DELETE_PROJECT_TASK = "GET_PROJECT_TASK";
+
+//Types for login/register
+export const SET_CURRENT_USER = "SET_CURRENT_USER";
