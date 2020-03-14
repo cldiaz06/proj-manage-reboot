@@ -30,6 +30,8 @@ class ProjectBoard extends Component {
         const {errors} = this.state;
 
         let boardContent;
+        let showProjTask;
+
         const boardAlgorithm = (errors, project_tasks) => {
             if (project_tasks.length<1){
                 if (errors.projectNotFound){
@@ -60,14 +62,23 @@ class ProjectBoard extends Component {
             }
         }
 
+        const showProjTaskAlgorithm= (errors) => {
+            if((!errors.projectIdentifier) && (!errors.projectNotFound)){
+                return(
+                    <Link to={`/addProjectTask/${id}`} className="btn btn-primary mb-3">
+                        <i className="fas fa-plus-circle"> Create Project Task</i>
+                    </Link>
+                );
+            }
+        }
+
         boardContent = boardAlgorithm(errors, project_tasks);
+        showProjTask = showProjTaskAlgorithm(errors);
 
         return (
             <div>
                 <div className="container">
-                    <Link to={`/addProjectTask/${id}`} className="btn btn-primary mb-3">
-                        <i className="fas fa-plus-circle"> Create Project Task</i>
-                    </Link>
+                    {showProjTask}
                     <br />
                     <hr />
                     {boardContent}
